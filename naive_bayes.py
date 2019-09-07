@@ -95,7 +95,7 @@ def confusion_matrix(test_matrix, ptable):
     for i in test_matrix:
         probs = calc_probability(ptable, i)
         mindex = probs.index(max(probs))
-        cmat[mindex][ovalues.index(i[0])] += 1
+        cmat[ovalues.index(i[0])][mindex] += 1
     for i in cmat:
         print(i)
     accuracy = sum([cmat[x][x] for x in range(len(create_outcome_list()))])

@@ -71,6 +71,7 @@ def split_table(node, index):
 
 
 def traverse_tree(root, input, mtable):
+    mtable = np.array(mtable)
     counts = [0] * 4
     olist = create_outcome_list()
     if len(root.children) == 0:
@@ -81,7 +82,7 @@ def traverse_tree(root, input, mtable):
         if child.value == input[downtree.index(child.label)]:
             if len([x for x in mtable if x[downtree.index(child.label)] == child.value]) == 0:
                 for i in olist:
-                    counts[olist.index(i)] += [x for x in mtable[len(mtable) - 1]].count(i)
+                    counts[olist.index(i)] += list(mtable[:, len(mtable[0]) - 1]).count(i)
                 return olist[counts.index(max(counts))]
             mtable = [x for x in mtable if x[downtree.index(child.label)] == child.value]
             return traverse_tree(child, input, mtable)
@@ -104,7 +105,14 @@ def makeTree(root):
 root = Node('root', ' ', [0] * 6)
 makeTree(root)
 k = 0
+cmat =  [[0] * 4 for i in range(4)]
+
+olist = create_outcome_list()
 for i in test_arr:
-    if traverse_tree(root, i[0:6], table) == i[6]:
+    p = traverse_tree(root, i[0:6], table)
+    cmat[olist.index(i[6])][olist.index(p)] += 1
+    if p == i[6]:
         k += 1
-print('Accuracy = ', k/len(test_arr))
+print('Accuracy = ', k / len(test_arr))
+for i in cmat:
+    print(i)
